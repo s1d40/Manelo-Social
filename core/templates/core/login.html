@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head %}
+{% block title %}Login - Social Media App{% endblock title %}
+
+
+{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enter</button>
+</form>
+<form action="{% url 'signup' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Register</button>
+</form>
+
+{% endblock %}
