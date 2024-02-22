@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Room - {{ chat_room.name }}{% endblock title %}
+
+{% block content %}
+<h1>Chat Room: {{ chat_room.name }}</h1>
+<div id="chat-messages">
+    {% for message in chat_room.messages.all %}
+        <div class="message">
+            <strong>{{ message.sender.username }}:</strong>
+            <p>{{ message.content }}</p>
+            <span>{{ message.sent_at }}</span>
+        </div>
+    {% empty %}
+        <p>No messages in this chat room yet.</p>
+    {% endfor %}
+</div>
+<form action="" method="post">
+    {% csrf_token %}
+    <textarea name="content" placeholder="Type your message here..." required></textarea>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock content %}

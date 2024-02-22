@@ -65,6 +65,7 @@ class Interest(models.Model):
 
 def post_image_upload_to(instance, filename):
     return f'users/images/{instance.author.pk}/{filename}'
+
 class Post(models.Model):
     
     author = models.ForeignKey(ManeloUser, on_delete=models.CASCADE, related_name='posts')
@@ -122,7 +123,13 @@ class GroupMember(models.Model):
     
     
     
+class ChatRoom(models.Model):
+    name = models.CharField(max_length=100)
+    members = models.ManyToManyField(User, related_name='chatrooms')     
+
+
 class Message(models.Model):
+    chat_room = models.ForeignKey(ChatRoom, related_name='messages', on_delete=models.CASCADE)
     sender = models.ForeignKey(ManeloUser, related_name='sent_messages', on_delete=models.CASCADE)
     recipient = models.ForeignKey(ManeloUser, related_name='received_messages', on_delete=models.CASCADE)
     content = models.TextField()
@@ -144,3 +151,5 @@ class Notification(models.Model):
 
     def __str__(self):
         return f'Notification for {self.recipient.full_name()}'
+
+

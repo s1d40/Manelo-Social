@@ -15,16 +15,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from .views import HomeView, UserRegister, CustomLoginView, HomeRedirect, CustomLogoutView
-from django.urls import path
+from django.urls import path, include  # make sure include is imported
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
 
+# Import your views here
+from .views import (
+    HomeView, UserRegister, CustomLoginView, HomeRedirect, CustomLogoutView, MessageViewSet, chat_room
+)
+
+# Create a router and register your viewsets with it
+router = DefaultRouter()
+router.register(r'messages', MessageViewSet)
 
 urlpatterns = [
     path('', HomeRedirect, name='index'),
-    path('signup/', UserRegister.as_view() , name='signup'),
+    path('signup/', UserRegister.as_view(), name='signup'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('user/<pk>/', HomeView.as_view(), name='home'),
-    path('logout/', CustomLogoutView.as_view(), name='logout')
+    path('logout/', CustomLogoutView.as_view(), name='logout'),
+    # Include the router urls into your urlpatterns
+    path('api/', include(router.urls)),  # This line includes all the routes defined by the router
+    path('chatrooms/<int:chat_room_id>/', chat_room, name='chat_room'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
